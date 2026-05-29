@@ -1,22 +1,22 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
+import { checkSupabaseEnv } from "@/lib/env";
 
-let client: SupabaseClient | null = null;
+function readEnv(name: "NEXT_PUBLIC_SUPABASE_URL" | "SUPABASE_SERVICE_ROLE_KEY") {
+  const value = process.env[name];
+  if (!value) return undefined;
+  return value.trim().replace(/^["']|["']$/g, "");
+}
 
 export function createSupabaseAdmin() {
-  if (client) return client;
-
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !key) {
-    throw new Error(
-      "Configure NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY no .env"
-    );
+  const envCheck = checkSupabaseEnv();
+  if (!envCheck.ok) {
+    throw new Error(envCheck.message);
   }
 
-  client = createClient(url, key, {
+  const url = readEnv("NEXT_PUBLIC_SUPABASE_URL")!;
+  const key = readEnv("SUPABASE_SERVICE_ROLE_KEY")!;
+
+  return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
-
-  return client;
 }
