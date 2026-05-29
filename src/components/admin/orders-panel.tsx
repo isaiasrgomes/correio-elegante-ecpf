@@ -360,7 +360,7 @@ export function OrdersPanel() {
                 <DetailField label="Destinatário" className="sm:col-span-2">
                   {selected.receiver_name} · {selected.receiver_class}
                 </DetailField>
-                <DetailField label="Anônimo" className="sm:col-span-2">
+                <DetailField label="Remetente" className="sm:col-span-2">
                   {selected.identification_mode === "ANONYMOUS"
                     ? "Anônimo"
                     : `${selected.sender_name} · ${selected.sender_class}`}
