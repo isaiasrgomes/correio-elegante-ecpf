@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #fff8fa;
+  --color-foreground: #2a1a1f;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(251 207 232 / 0.6);
+  color: #3d1520;
+}
+
+.glass {
+  @apply border border-white/40 bg-white/50 shadow-lg backdrop-blur-xl;
+}
+
+.gradient-hero {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(254 205 211 / 0.7), transparent),
+    radial-gradient(ellipse 50% 40% at 90% 20%, rgb(252 165 165 / 0.35), transparent),
+    radial-gradient(ellipse 40% 50% at 10% 60%, rgb(251 207 232 / 0.4), transparent),
+    linear-gradient(180deg, #fff5f7 0%, #fff8fa 50%, #ffffff 100%);
+}
+
+.text-muted {
+  color: #5c4550;
+}
+
+.text-muted-dark {
+  color: #3d2a32;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(255 255 255 / 0.4) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.5s infinite;
+}
+
+/* Oculta indicadores/toast de desenvolvimento do Next.js */
+nextjs-portal,
+[data-nextjs-toast],
+[data-nextjs-dialog-overlay] {
+  display: none !important;
+}
