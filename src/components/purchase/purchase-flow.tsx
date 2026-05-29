@@ -47,6 +47,7 @@ export function PurchaseFlow() {
   const [globalError, setGlobalError] = useState<string | null>(null);
 
   const [formId] = useState("purchase-form");
+  const [mobileSummaryOpen, setMobileSummaryOpen] = useState(true);
 
   const letter = LETTER_TYPES.find((l) => l.id === letterTypeId);
 
@@ -623,15 +624,26 @@ export function PurchaseFlow() {
 
       {step < 3 && step > 0 && (
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rose-100 bg-white/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-xl lg:hidden">
-          <OrderSummary {...summaryProps} />
+          <OrderSummary
+            {...summaryProps}
+            collapsible
+            expanded={mobileSummaryOpen}
+            onExpandedChange={setMobileSummaryOpen}
+          />
         </div>
       )}
 
       {step === 1 && (
-        <div className="h-44 lg:hidden" aria-hidden />
+        <div
+          className={cn("lg:hidden", mobileSummaryOpen ? "h-44" : "h-[4.5rem]")}
+          aria-hidden
+        />
       )}
       {step === 2 && (
-        <div className="h-52 lg:hidden" aria-hidden />
+        <div
+          className={cn("lg:hidden", mobileSummaryOpen ? "h-56" : "h-[4.5rem]")}
+          aria-hidden
+        />
       )}
     </div>
   );

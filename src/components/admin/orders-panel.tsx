@@ -379,7 +379,7 @@ export function OrdersPanel() {
               {selected.spotify_link && (() => {
                 const spotifyCodeUrl = getSpotifyCodeImageUrl(selected.spotify_link);
                 return (
-                  <div className="mt-4 rounded-2xl border border-rose-50 bg-rose-50/20 p-4">
+                  <div className="mt-4 flex flex-col gap-4 rounded-2xl border border-rose-50 bg-rose-50/20 p-4">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
                       Spotify Code
                     </p>
@@ -389,13 +389,13 @@ export function OrdersPanel() {
                         <img
                           src={spotifyCodeUrl}
                           alt="Spotify Code da música"
-                          className="mx-auto mt-3 max-w-[280px] rounded-2xl border border-rose-100 bg-white p-4 shadow-sm"
+                          className="mx-auto max-w-[280px] rounded-2xl border border-rose-100 bg-white p-4 shadow-sm"
                         />
                         <Button
                           type="button"
                           variant="secondary"
                           size="sm"
-                          className="mt-3 w-full rounded-xl sm:w-auto"
+                          className="w-full rounded-xl sm:w-auto"
                           disabled={downloadingSpotifyCode}
                           onClick={() =>
                             downloadSpotifyCode(
@@ -413,7 +413,7 @@ export function OrdersPanel() {
                         </Button>
                       </>
                     ) : (
-                      <p className="mt-2 text-sm text-amber-800">
+                      <p className="text-sm text-amber-800">
                         Link inválido para gerar o código.
                       </p>
                     )}
@@ -421,7 +421,7 @@ export function OrdersPanel() {
                       href={selected.spotify_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-2 inline-block text-xs text-rose-600 underline"
+                      className="inline-block border-t border-rose-100 pt-4 text-xs text-rose-600 underline"
                     >
                       Abrir link original
                     </a>

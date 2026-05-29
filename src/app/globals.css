@@ -3,18 +3,21 @@
 @theme inline {
   --color-background: #fff8fa;
   --color-foreground: #2a1a1f;
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
+  font-family: var(--font-geist-sans), ui-sans-serif, sans-serif;
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-sans);
+  font-family: inherit;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
