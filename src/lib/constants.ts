@@ -20,6 +20,18 @@ export type ClassOption = (typeof CLASSES)[number];
 
 export type LetterFeature = "message" | "spotify" | "polaroid";
 
+export type LetterTypeId =
+  | "simples"
+  | "pirulito"
+  | "spotify"
+  | "bombom"
+  | "polaroid"
+  | "flor";
+
+export const LETTER_IMAGE_SCALES: Partial<Record<LetterTypeId, number>> = {
+  simples: 0.76,
+};
+
 export const LETTER_TYPES = [
   {
     id: "simples",
@@ -27,7 +39,6 @@ export const LETTER_TYPES = [
     price: 1.0,
     description: "Uma mensagem sincera para quem você ama.",
     image: "/illustrations/carta-simples.svg",
-    imageScale: 0.76,
     features: ["message"] as LetterFeature[],
   },
   {
@@ -71,8 +82,6 @@ export const LETTER_TYPES = [
     features: ["message"] as LetterFeature[],
   },
 ] as const;
-
-export type LetterTypeId = (typeof LETTER_TYPES)[number]["id"];
 
 export const EXTRAS = [
   { id: "pirulito", name: "Pirulito", price: 1.5 },

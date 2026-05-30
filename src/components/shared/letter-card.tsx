@@ -5,7 +5,7 @@ import { Check } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { LETTER_TYPES } from "@/lib/constants";
+import { LETTER_IMAGE_SCALES, type LetterTypeId } from "@/lib/constants";
 import { Illustration } from "@/components/shared/illustration";
 
 interface LetterCardProps {
@@ -29,7 +29,7 @@ export function LetterCard({
   onSelect,
   compact,
 }: LetterCardProps) {
-  const imageScale = LETTER_TYPES.find((letter) => letter.id === id)?.imageScale;
+  const imageScale = LETTER_IMAGE_SCALES[id as LetterTypeId];
   return (
     <motion.article
       layout
