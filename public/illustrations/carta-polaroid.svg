@@ -1,5 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-  <rect x="55" y="45" width="90" height="110" rx="8" fill="white" stroke="#fda4af" stroke-width="3"/>
-  <rect x="65" y="55" width="70" height="70" rx="4" fill="#fce7f3"/>
-  <rect x="38" y="70" width="55" height="70" rx="12" fill="#fce7f3" stroke="#f43f5e" stroke-width="2"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="453px" height="288px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 343.43 218.2"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str2 {stroke:#FDA4AF;stroke-width:7.12;stroke-miterlimit:22.9256}
+    .str1 {stroke:#F43F5E;stroke-width:4.74;stroke-miterlimit:22.9256}
+    .str0 {stroke:#FB7185;stroke-width:7.12;stroke-linecap:round;stroke-miterlimit:22.9256}
+    .fil1 {fill:none;fill-rule:nonzero}
+    .fil4 {fill:#A7C4D2;fill-rule:nonzero}
+    .fil2 {fill:#FB7185;fill-rule:nonzero}
+    .fil0 {fill:#FCE7F3;fill-rule:nonzero}
+    .fil3 {fill:white;fill-rule:nonzero}
+   ]]>
+  </style>
+   <clipPath id="id0" style="clip-rule:nonzero">
+    <path d="M2.37 169.26l0 -120.31c0,-25.72 21.85,-46.58 48.79,-46.58l187.03 0c26.94,0 48.79,20.86 48.79,46.57l0 120.32c0,25.71 -21.85,46.57 -48.79,46.57l-187.03 0c-26.94,0 -48.79,-20.86 -48.79,-46.58z"/>
+   </clipPath>
+ </defs>
+ <g id="Camada_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <path class="fil0" d="M2.37 169.26l0 -120.31c0,-25.72 21.85,-46.58 48.79,-46.58l187.03 0c26.94,0 48.79,20.86 48.79,46.57l0 120.32c0,25.71 -21.85,46.57 -48.79,46.57l-187.03 0c-26.94,0 -48.79,-20.86 -48.79,-46.58z"/>
+  <g style="clip-path:url(#id0)">
+   <g id="_2162887998960">
+    <g>
+     <polyline id="_1" class="fil1 str0" points="2.37,29.41 144.68,136.14 286.98,29.41 "/>
+     <path class="fil2" d="M175.13 115.11c0,21.98 -30.45,35.81 -30.45,35.81 0,0 -30.46,-13.83 -30.46,-35.81 0,-5.67 3.2,-16.15 15.57,-16.15 9.9,0 14.89,8 14.89,8 0,0 4.98,-8 14.88,-8 12.37,0 15.57,10.48 15.57,16.15z"/>
+    </g>
+   </g>
+  </g>
+  <path class="fil1 str1" d="M2.37 169.26l0 -120.31c0,-25.72 21.85,-46.58 48.79,-46.58l187.03 0c26.94,0 48.79,20.86 48.79,46.57l0 120.32c0,25.71 -21.85,46.57 -48.79,46.57l-187.03 0c-26.94,0 -48.79,-20.86 -48.79,-46.58z"/>
+  <g id="_2162887999056">
+   <path class="fil3 str2" d="M238.68 29.37l91.32 0c5.46,0 9.88,4.42 9.88,9.87l0 116.01c0,5.45 -4.42,9.87 -9.88,9.87l-91.32 0c-5.45,0 -9.87,-4.42 -9.87,-9.87l0 -116.01c0,-5.45 4.42,-9.87 9.87,-9.87z"/>
+   <path class="fil4" d="M246.08 41.71l76.52 0c2.72,0 4.94,2.21 4.94,4.93l0 76.52c0,2.72 -2.22,4.93 -4.94,4.93l-76.52 0c-2.72,0 -4.93,-2.21 -4.93,-4.93l0 -76.52c0,-2.72 2.21,-4.93 4.93,-4.93z"/>
+  </g>
+ </g>
 </svg>

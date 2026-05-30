@@ -12,7 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { ORDER_STATUS_LABELS, LETTER_TYPES, EXTRAS, SENDER_NON_STUDENT_LABEL } from "@/lib/constants";
+import { ORDER_STATUS_LABELS, LETTER_TYPES, EXTRAS, SENDER_NON_STUDENT_LABEL, STAFF_LABEL } from "@/lib/constants";
 import { getSpotifyCodeImageUrl } from "@/lib/spotify-code";
 import { OrderStats } from "@/components/admin/order-stats";
 import { DetailField } from "@/components/admin/detail-field";
@@ -64,8 +64,16 @@ const EMPTY_STATS: OrderStatsData = {
 
 function formatSender(order: Order) {
   if (order.identification_mode === "ANONYMOUS") return "Anônimo";
-  if (order.sender_class === SENDER_NON_STUDENT_LABEL) {
-    return `${order.sender_name} · ${SENDER_NON_STUDENT_LABEL}`;
+  if (
+    order.sender_class === SENDER_NON_STUDENT_LABEL ||
+    order.sender_class === "Não é aluno"
+  ) {
+    const label =
+      order.sender_class === "Não é aluno" ? "Não é aluno" : SENDER_NON_STUDENT_LABEL;
+    return `${order.sender_name} · ${label}`;
+  }
+  if (order.sender_class === STAFF_LABEL) {
+    return `${order.sender_name} · ${STAFF_LABEL}`;
   }
   return `${order.sender_name} · ${order.sender_class}`;
 }
@@ -102,6 +110,8 @@ export function OrdersPanel() {
   const [downloadingPolaroid, setDownloadingPolaroid] = useState(false);
   const [downloadingSpotifyCode, setDownloadingSpotifyCode] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<Order | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const fetchOrders = useCallback(async () => {
     setLoading(true);
@@ -137,21 +147,34 @@ export function OrdersPanel() {
     }
   };
 
-  const deleteOrder = async (id: string) => {
-    if (!confirm("Tem certeza que deseja excluir este pedido? Esta ação não pode ser desfeita.")) {
-      return;
-    }
+  const confirmDeleteOrder = async () => {
+    if (!deleteConfirm) return;
     setDeleting(true);
+    setDeleteError(null);
     try {
-      const { ok, error } = await fetchJson(`/api/admin/orders/${id}`, { method: "DELETE" });
+      const { ok, error } = await fetchJson(`/api/admin/orders/${deleteConfirm.id}`, {
+        method: "DELETE",
+      });
       if (!ok) throw new Error(error ?? "Erro ao excluir.");
+      setDeleteConfirm(null);
       setSelected(null);
       fetchOrders();
     } catch (error) {
-      alert(error instanceof Error ? error.message : "Erro ao excluir pedido.");
+      setDeleteError(error instanceof Error ? error.message : "Erro ao excluir pedido.");
     } finally {
       setDeleting(false);
     }
+  };
+
+  const openDeleteConfirm = (order: Order) => {
+    setDeleteError(null);
+    setDeleteConfirm(order);
+  };
+
+  const closeDeleteConfirm = () => {
+    if (deleting) return;
+    setDeleteConfirm(null);
+    setDeleteError(null);
   };
 
   const letterName = (id: string) =>
@@ -528,7 +551,7 @@ export function OrdersPanel() {
                 variant="destructive"
                 className="flex-1 rounded-2xl sm:flex-none"
                 disabled={deleting}
-                onClick={() => deleteOrder(selected.id)}
+                onClick={() => openDeleteConfirm(selected)}
               >
                 {deleting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -549,6 +572,69 @@ export function OrdersPanel() {
                 onClick={() => setSelected(null)}
               >
                 Fechar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deleteConfirm && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-[#2a1a1f]/60 p-4 backdrop-blur-sm"
+          onClick={closeDeleteConfirm}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-order-title"
+            className="w-full max-w-md overflow-hidden rounded-3xl border border-rose-100 bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="border-b border-rose-50 bg-gradient-to-r from-rose-50/80 to-white px-6 py-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-rose-500">
+                Confirmar exclusão
+              </p>
+              <h3 id="delete-order-title" className="mt-1 text-xl font-bold text-[#2a1a1f]">
+                Excluir pedido?
+              </h3>
+            </div>
+
+            <div className="px-6 py-5">
+              <p className="text-sm leading-relaxed text-muted">
+                Tem certeza que deseja excluir o pedido de{" "}
+                <strong className="font-semibold text-[#2a1a1f]">
+                  {deleteConfirm.receiver_name}
+                </strong>
+                ? Esta ação não pode ser desfeita.
+              </p>
+              {deleteError && (
+                <p className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {deleteError}
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col-reverse gap-2 border-t border-rose-50 bg-rose-50/30 px-6 py-4 sm:flex-row sm:justify-end">
+              <Button
+                variant="ghost"
+                className="rounded-2xl sm:w-auto"
+                disabled={deleting}
+                onClick={closeDeleteConfirm}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="destructive"
+                className="rounded-2xl sm:w-auto"
+                disabled={deleting}
+                onClick={confirmDeleteOrder}
+              >
+                {deleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+                Excluir pedido
               </Button>
             </div>
           </div>

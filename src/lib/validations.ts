@@ -1,17 +1,25 @@
 import { z } from "zod";
-import { CLASSES, LETTER_TYPES, MAX_MESSAGE_LENGTH, SENDER_NON_STUDENT_LABEL } from "./constants";
+import {
+  CLASSES,
+  LETTER_TYPES,
+  MAX_MESSAGE_LENGTH,
+  SENDER_NON_STUDENT_LABEL,
+  STAFF_LABEL,
+} from "./constants";
 
 const letterIds = LETTER_TYPES.map((l) => l.id) as [string, ...string[]];
 const classOptions = [...CLASSES] as [string, ...string[]];
+const senderTypes = ["student", "staff", "external"] as const;
 
 export const orderSchema = z
   .object({
     letterType: z.enum(letterIds),
     receiverName: z.string().min(2, "Informe o nome de quem vai receber."),
-    receiverClass: z.enum(classOptions),
+    receiverIsStudent: z.boolean().optional(),
+    receiverClass: z.enum(classOptions).optional(),
     identificationMode: z.enum(["IDENTIFIED", "ANONYMOUS"]),
     senderName: z.string().optional(),
-    senderIsStudent: z.boolean().optional(),
+    senderType: z.enum(senderTypes).optional(),
     senderClass: z.enum(classOptions).optional(),
     message: z
       .string()
@@ -29,6 +37,14 @@ export const orderSchema = z
       .optional(),
   })
   .superRefine((data, ctx) => {
+    if (data.receiverIsStudent !== false && !data.receiverClass) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Selecione a turma de quem vai receber.",
+        path: ["receiverClass"],
+      });
+    }
+
     if (data.identificationMode === "IDENTIFIED") {
       if (!data.senderName || data.senderName.length < 2) {
         ctx.addIssue({
@@ -37,7 +53,7 @@ export const orderSchema = z
           path: ["senderName"],
         });
       }
-      if (data.senderIsStudent !== false && !data.senderClass) {
+      if (data.senderType === "student" && !data.senderClass) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Selecione sua turma.",
@@ -69,9 +85,15 @@ export const orderSchema = z
 
 export type OrderFormValues = z.infer<typeof orderSchema>;
 
+export function resolveReceiverClass(data: OrderFormValues): string {
+  if (data.receiverIsStudent === false) return STAFF_LABEL;
+  return data.receiverClass ?? CLASSES[0];
+}
+
 export function resolveSenderClass(data: OrderFormValues): string | null {
   if (data.identificationMode !== "IDENTIFIED") return null;
-  if (data.senderIsStudent === false) return SENDER_NON_STUDENT_LABEL;
+  if (data.senderType === "external") return SENDER_NON_STUDENT_LABEL;
+  if (data.senderType === "staff") return STAFF_LABEL;
   return data.senderClass ?? null;
 }
 

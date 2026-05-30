@@ -11,10 +11,10 @@ export const CLASSES = [
   "3°B",
   "3°C",
   "3°D",
-  "Servidor",
 ] as const;
 
-export const SENDER_NON_STUDENT_LABEL = "Não é aluno" as const;
+export const STAFF_LABEL = "Servidor" as const;
+export const SENDER_NON_STUDENT_LABEL = "Não é da escola" as const;
 
 export type ClassOption = (typeof CLASSES)[number];
 
@@ -27,6 +27,7 @@ export const LETTER_TYPES = [
     price: 1.0,
     description: "Uma mensagem sincera para quem você ama.",
     image: "/illustrations/carta-simples.svg",
+    imageScale: 0.76,
     features: ["message"] as LetterFeature[],
   },
   {

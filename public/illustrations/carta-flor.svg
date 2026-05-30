@@ -1,7 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-  <rect x="40" y="70" width="100" height="70" rx="12" fill="#fce7f3" stroke="#f43f5e" stroke-width="2"/>
-  <circle cx="145" cy="85" r="14" fill="#fda4af"/><circle cx="160" cy="100" r="14" fill="#fb7185"/>
-  <circle cx="145" cy="115" r="14" fill="#f43f5e"/><circle cx="130" cy="100" r="14" fill="#fda4af"/>
-  <circle cx="145" cy="100" r="10" fill="#fef08a"/>
-  <rect x="142" y="125" width="6" height="40" rx="3" fill="#86efac"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="453px" height="294px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 462.57 299.95"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str1 {stroke:#F43F5E;stroke-width:6.38;stroke-miterlimit:22.9256}
+    .str0 {stroke:#FB7185;stroke-width:9.57;stroke-linecap:round;stroke-miterlimit:22.9256}
+    .fil1 {fill:none;fill-rule:nonzero}
+    .fil5 {fill:#86EFAC;fill-rule:nonzero}
+    .fil4 {fill:#F43F5E;fill-rule:nonzero}
+    .fil2 {fill:#FB7185;fill-rule:nonzero}
+    .fil0 {fill:#FCE7F3;fill-rule:nonzero}
+    .fil3 {fill:#FDA4AF;fill-rule:nonzero}
+    .fil7 {fill:#FEF08A;fill-rule:nonzero}
+    .fil6 {fill:#FFB8B8;fill-rule:nonzero}
+   ]]>
+  </style>
+    <clipPath id="id0" style="clip-rule:nonzero">
+     <path d="M49.13 3.19l290.94 0c25.36,0 45.94,22.04 45.94,49.22l0 188.67c0,27.18 -20.58,49.22 -45.94,49.22l-290.94 0c-25.37,0 -45.94,-22.04 -45.94,-49.22l0 -188.67c0,-27.18 20.57,-49.22 45.94,-49.22z"/>
+    </clipPath>
+ </defs>
+ <g id="Camada_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_2162888922992">
+   <path class="fil0" d="M49.13 3.19l290.94 0c25.36,0 45.94,22.04 45.94,49.22l0 188.67c0,27.18 -20.58,49.22 -45.94,49.22l-290.94 0c-25.37,0 -45.94,-22.04 -45.94,-49.22l0 -188.67c0,-27.18 20.57,-49.22 45.94,-49.22z"/>
+   <g style="clip-path:url(#id0)">
+    <g>
+     <g>
+      <polyline id="_1" class="fil1 str0" points="3.19,39.56 194.6,183.11 386.01,39.56 "/>
+      <path class="fil2" d="M235.56 154.83c0,29.57 -40.96,48.16 -40.96,48.16 0,0 -40.97,-18.59 -40.97,-48.16 0,-7.63 4.31,-21.73 20.95,-21.73 13.31,0 20.02,10.77 20.02,10.77 0,0 6.7,-10.77 20.02,-10.77 16.64,0 20.94,14.1 20.94,21.73z"/>
+     </g>
+    </g>
+   </g>
+   <path class="fil1 str1" d="M49.13 3.19l290.94 0c25.36,0 45.94,22.04 45.94,49.22l0 188.67c0,27.18 -20.58,49.22 -45.94,49.22l-290.94 0c-25.37,0 -45.94,-22.04 -45.94,-49.22l0 -188.67c0,-27.18 20.57,-49.22 45.94,-49.22z"/>
+   <g>
+    <circle class="fil3" cx="370.06" cy="82.94" r="44.66"/>
+    <circle class="fil2" cx="417.91" cy="130.79" r="44.66"/>
+    <circle class="fil4" cx="370.06" cy="174.7" r="44.66"/>
+    <path class="fil5" d="M370.06 141.38l0 0c5.28,-0.01 9.57,5.32 9.57,11.89l0 134.79c0,6.56 -4.29,11.89 -9.57,11.89l0 0c-5.29,0 -9.57,-5.33 -9.57,-11.89l0 -134.79c0,-6.57 4.28,-11.9 9.57,-11.9z"/>
+    <circle class="fil6" cx="322.2" cy="130.79" r="44.66"/>
+    <circle class="fil7" cx="370.06" cy="130.79" r="31.9"/>
+   </g>
+  </g>
+ </g>
 </svg>

@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { LETTER_TYPES } from "@/lib/constants";
+import { Illustration } from "@/components/shared/illustration";
 
 interface LetterCardProps {
   id: string;
@@ -19,6 +20,7 @@ interface LetterCardProps {
 }
 
 export function LetterCard({
+  id,
   name,
   price,
   description,
@@ -27,12 +29,13 @@ export function LetterCard({
   onSelect,
   compact,
 }: LetterCardProps) {
+  const imageScale = LETTER_TYPES.find((letter) => letter.id === id)?.imageScale;
   return (
     <motion.article
       layout
       whileHover={{ y: -4 }}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-3xl border bg-white/60 p-5 shadow-lg shadow-rose-200/20 backdrop-blur-md transition-all duration-300",
+        "group relative flex flex-col overflow-visible rounded-3xl border bg-white/60 p-5 shadow-lg shadow-rose-200/20 backdrop-blur-md transition-all duration-300",
         selected
           ? "border-rose-400 ring-2 ring-rose-300/50"
           : "border-rose-100/80 hover:border-rose-300/60 hover:shadow-xl hover:shadow-rose-300/20"
@@ -43,14 +46,14 @@ export function LetterCard({
           <Check className="h-4 w-4" />
         </span>
       )}
-      <div className="relative mx-auto mb-4 aspect-square w-full max-w-[140px]">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          className="object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
-        />
-      </div>
+      <Illustration
+        src={image}
+        alt={name}
+        imageScale={imageScale}
+        hoverScale
+        className="mx-auto mb-4"
+        imageClassName="drop-shadow-sm"
+      />
       <h3 className="text-center text-lg font-semibold text-[#2a1a1f]">{name}</h3>
       {!compact && (
         <p className="mt-2 text-center text-sm leading-relaxed text-[#5c4550]">

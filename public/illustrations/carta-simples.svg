@@ -1,5 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-  <rect x="40" y="50" width="120" height="90" rx="16" fill="#fce7f3" stroke="#f43f5e" stroke-width="3"/>
-  <path d="M40 65 L100 110 L160 65" stroke="#fb7185" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <circle cx="100" cy="145" r="8" fill="#fda4af"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="384px" height="291px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 384 290.34"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str1 {stroke:#F43F5E;stroke-width:9.37;stroke-miterlimit:22.9256}
+    .str0 {stroke:#FB7185;stroke-width:9.37;stroke-linecap:round;stroke-miterlimit:22.9256}
+    .fil1 {fill:none;fill-rule:nonzero}
+    .fil2 {fill:#FB7185;fill-rule:nonzero}
+    .fil0 {fill:#FCE7F3;fill-rule:nonzero}
+   ]]>
+  </style>
+   <clipPath id="id0" style="clip-rule:nonzero">
+    <path d="M54.63 4.68l274.74 0c27.58,0.01 49.95,22.37 49.95,49.96l0 181.07c0,27.58 -22.37,49.95 -49.95,49.95l-274.74 0c-27.58,0 -49.95,-22.37 -49.95,-49.95l0 -181.07c0,-27.59 22.37,-49.96 49.95,-49.96z"/>
+   </clipPath>
+ </defs>
+ <g id="Camada_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <path class="fil0" d="M54.63 4.68l274.74 0c27.58,0.01 49.95,22.37 49.95,49.96l0 181.07c0,27.58 -22.37,49.95 -49.95,49.95l-274.74 0c-27.58,0 -49.95,-22.37 -49.95,-49.95l0 -181.07c0,-27.59 22.37,-49.96 49.95,-49.96z"/>
+  <g style="clip-path:url(#id0)">
+   <g id="_2126282356080">
+    <g>
+     <polyline id="_1" class="fil1 str0" points="4.68,51.51 192,192 379.32,51.51 "/>
+     <path class="fil2" d="M232.09 164.33c0,28.93 -40.09,47.13 -40.09,47.13 0,0 -40.09,-18.2 -40.09,-47.13 0,-7.48 4.22,-21.27 20.5,-21.27 13.03,0 19.59,10.54 19.59,10.54 0,0 6.56,-10.54 19.59,-10.54 16.28,0 20.5,13.79 20.5,21.27z"/>
+    </g>
+   </g>
+  </g>
+  <path class="fil1 str1" d="M54.63 4.68l274.74 0c27.58,0.01 49.95,22.37 49.95,49.96l0 181.07c0,27.58 -22.37,49.95 -49.95,49.95l-274.74 0c-27.58,0 -49.95,-22.37 -49.95,-49.95l0 -181.07c0,-27.59 22.37,-49.96 49.95,-49.96z"/>
+ </g>
 </svg>

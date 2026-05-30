@@ -59,9 +59,10 @@ export function PurchaseFlow() {
     defaultValues: {
       letterType: (preselected as OrderFormValues["letterType"]) ?? "simples",
       receiverName: "",
+      receiverIsStudent: true,
       receiverClass: "1°A",
       identificationMode: "ANONYMOUS",
-      senderIsStudent: true,
+      senderType: "student",
       message: "",
       spotifyLink: "",
       extras: [],
@@ -69,7 +70,8 @@ export function PurchaseFlow() {
   });
 
   const identificationMode = form.watch("identificationMode");
-  const senderIsStudent = form.watch("senderIsStudent");
+  const receiverIsStudent = form.watch("receiverIsStudent");
+  const senderType = form.watch("senderType");
   const message = form.watch("message");
 
   useEffect(() => {
@@ -301,7 +303,40 @@ export function PurchaseFlow() {
                   </p>
 
                   <form id={formId} onSubmit={onStep2Next} className="mt-8 space-y-6">
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-3xl border border-rose-100 bg-white/60 p-5">
+                      <Label className="mb-3 block">Quem vai receber a carta?</Label>
+                      <div className="flex flex-col gap-2 sm:flex-row">
+                        <button
+                          type="button"
+                          onClick={() => form.setValue("receiverIsStudent", true)}
+                          className={cn(
+                            "flex-1 rounded-xl border px-3 py-2 text-sm font-medium transition",
+                            receiverIsStudent !== false
+                              ? "border-rose-400 bg-rose-50 text-rose-800"
+                              : "border-rose-100 hover:border-rose-200"
+                          )}
+                        >
+                          Aluno
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            form.setValue("receiverIsStudent", false);
+                            form.setValue("receiverClass", undefined);
+                          }}
+                          className={cn(
+                            "flex-1 rounded-xl border px-3 py-2 text-sm font-medium transition",
+                            receiverIsStudent === false
+                              ? "border-rose-400 bg-rose-50 text-rose-800"
+                              : "border-rose-100 hover:border-rose-200"
+                          )}
+                        >
+                          Servidor
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className={cn("grid gap-4", receiverIsStudent !== false && "sm:grid-cols-2")}>
                       <div className="space-y-2">
                         <Label>Nome de quem vai receber</Label>
                         <Input
@@ -314,26 +349,33 @@ export function PurchaseFlow() {
                           </p>
                         )}
                       </div>
-                      <div className="space-y-2">
-                        <Label>Turma de quem vai receber</Label>
-                        <Select
-                          value={form.watch("receiverClass")}
-                          onValueChange={(v) =>
-                            form.setValue("receiverClass", v as OrderFormValues["receiverClass"])
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {CLASSES.map((c) => (
-                              <SelectItem key={c} value={c}>
-                                {c}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      {receiverIsStudent !== false && (
+                        <div className="space-y-2">
+                          <Label>Turma de quem vai receber</Label>
+                          <Select
+                            value={form.watch("receiverClass") ?? ""}
+                            onValueChange={(v) =>
+                              form.setValue("receiverClass", v as OrderFormValues["receiverClass"])
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {CLASSES.map((c) => (
+                                <SelectItem key={c} value={c}>
+                                  {c}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {form.formState.errors.receiverClass && (
+                            <p className="text-xs text-red-600">
+                              {form.formState.errors.receiverClass.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <div className="rounded-3xl border border-rose-100 bg-white/60 p-5">
@@ -343,7 +385,7 @@ export function PurchaseFlow() {
                           type="button"
                           onClick={() => {
                             form.setValue("identificationMode", "IDENTIFIED");
-                            form.setValue("senderIsStudent", true);
+                            form.setValue("senderType", "student");
                           }}
                           className={cn(
                             "flex-1 rounded-2xl border px-4 py-3 text-sm font-medium transition",
@@ -372,41 +414,56 @@ export function PurchaseFlow() {
                     {identificationMode === "IDENTIFIED" && (
                       <div className="space-y-4">
                         <div className="rounded-2xl border border-rose-50 bg-white/80 px-4 py-3">
-                          <Label className="mb-3 block text-sm">Você é aluno?</Label>
+                          <Label className="mb-3 block text-sm">
+                            Você é aluno, servidor ou não é da escola?
+                          </Label>
                           <div className="flex flex-col gap-2 sm:flex-row">
                             <button
                               type="button"
-                              onClick={() => {
-                                form.setValue("senderIsStudent", true);
-                              }}
+                              onClick={() => form.setValue("senderType", "student")}
                               className={cn(
                                 "flex-1 rounded-xl border px-3 py-2 text-sm font-medium transition",
-                                senderIsStudent !== false
+                                senderType === "student"
                                   ? "border-rose-400 bg-rose-50 text-rose-800"
                                   : "border-rose-100 hover:border-rose-200"
                               )}
                             >
-                              Sim, sou aluno
+                              Sou aluno
                             </button>
                             <button
                               type="button"
                               onClick={() => {
-                                form.setValue("senderIsStudent", false);
+                                form.setValue("senderType", "staff");
                                 form.setValue("senderClass", undefined);
                               }}
                               className={cn(
                                 "flex-1 rounded-xl border px-3 py-2 text-sm font-medium transition",
-                                senderIsStudent === false
+                                senderType === "staff"
                                   ? "border-rose-400 bg-rose-50 text-rose-800"
                                   : "border-rose-100 hover:border-rose-200"
                               )}
                             >
-                              Não sou aluno
+                              Sou servidor
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                form.setValue("senderType", "external");
+                                form.setValue("senderClass", undefined);
+                              }}
+                              className={cn(
+                                "flex-1 rounded-xl border px-3 py-2 text-sm font-medium transition",
+                                senderType === "external"
+                                  ? "border-rose-400 bg-rose-50 text-rose-800"
+                                  : "border-rose-100 hover:border-rose-200"
+                              )}
+                            >
+                              Não sou da escola
                             </button>
                           </div>
                         </div>
 
-                        <div className="grid gap-4 sm:grid-cols-2">
+                        <div className={cn("grid gap-4", senderType === "student" && "sm:grid-cols-2")}>
                           <div className="space-y-2">
                             <Label>Seu nome</Label>
                             <Input {...form.register("senderName")} placeholder="Como você se chama" />
@@ -416,7 +473,7 @@ export function PurchaseFlow() {
                               </p>
                             )}
                           </div>
-                          {senderIsStudent !== false && (
+                          {senderType === "student" && (
                             <div className="space-y-2">
                               <Label>Sua turma</Label>
                               <Select

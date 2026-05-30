@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { HOW_IT_WORKS } from "@/lib/constants";
+import { Illustration } from "@/components/shared/illustration";
 
 export function HowItWorks() {
   return (
@@ -34,14 +34,7 @@ export function HowItWorks() {
               <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-red-600 text-lg font-bold text-white shadow-md shadow-rose-400/30">
                 {item.step}
               </span>
-              <div className="relative mb-5 h-28 w-28">
-                <Image
-                  src={item.image}
-                  alt=""
-                  fill
-                  className="object-contain"
-                />
-              </div>
+              <Illustration src={item.image} alt="" className="mb-5" />
               <h3 className="text-lg font-semibold text-[#2a1a1f]">{item.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">{item.text}</p>
             </motion.article>

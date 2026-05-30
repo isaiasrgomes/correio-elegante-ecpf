@@ -1,5 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-  <rect x="35" y="55" width="110" height="80" rx="14" fill="#fce7f3" stroke="#f43f5e" stroke-width="2"/>
-  <circle cx="155" cy="75" r="28" fill="#fda4af" stroke="#e11d48" stroke-width="2"/>
-  <rect x="150" y="100" width="10" height="50" rx="5" fill="#fecdd3"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="469px" height="325px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 532.95 369.52"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str2 {stroke:#E11D48;stroke-width:7.11;stroke-miterlimit:22.9256}
+    .str1 {stroke:#F43F5E;stroke-width:7.11;stroke-miterlimit:22.9256}
+    .str0 {stroke:#FB7185;stroke-width:10.66;stroke-linecap:round;stroke-miterlimit:22.9256}
+    .fil1 {fill:none;fill-rule:nonzero}
+    .fil2 {fill:#FB7185;fill-rule:nonzero}
+    .fil0 {fill:#FCE7F3;fill-rule:nonzero}
+    .fil3 {fill:#FDA4AF;fill-rule:nonzero}
+    .fil4 {fill:#FECDD3;fill-rule:nonzero}
+   ]]>
+  </style>
+   <clipPath id="id0" style="clip-rule:nonzero">
+    <path d="M53.29 31.98l291.35 0c27.47,0 49.75,22.27 49.75,49.74l0 184.76c0,27.46 -22.28,49.74 -49.75,49.74l-291.35 0c-27.46,0 -49.74,-22.28 -49.74,-49.74l0 -184.76c0,-27.47 22.28,-49.74 49.75,-49.74z"/>
+   </clipPath>
+ </defs>
+ <g id="Camada_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <path class="fil0" d="M53.29 31.98l291.35 0c27.47,0 49.75,22.27 49.75,49.74l0 184.76c0,27.46 -22.28,49.74 -49.75,49.74l-291.35 0c-27.46,0 -49.74,-22.28 -49.74,-49.74l0 -184.76c0,-27.47 22.28,-49.74 49.75,-49.74z"/>
+  <g style="clip-path:url(#id0)">
+   <g id="_2126616838784">
+    <g>
+     <polyline id="_1" class="fil1 str0" points="-14.21,67.51 198.97,227.39 412.15,67.51 "/>
+     <path class="fil2" d="M244.6 195.9c0,32.92 -45.63,53.64 -45.63,53.64 0,0 -45.63,-20.72 -45.63,-53.64 0,-8.51 4.8,-24.21 23.34,-24.21 14.82,0 22.29,12 22.29,12 0,0 7.47,-12 22.29,-12 18.54,0 23.34,15.7 23.34,24.21z"/>
+    </g>
+   </g>
+  </g>
+  <path class="fil1 str1" d="M53.29 31.98l291.35 0c27.47,0 49.75,22.27 49.75,49.74l0 184.76c0,27.46 -22.28,49.74 -49.75,49.74l-291.35 0c-27.46,0 -49.74,-22.28 -49.74,-49.74l0 -184.76c0,-27.47 22.28,-49.74 49.75,-49.74z"/>
+  <circle class="fil3 str2" cx="429.92" cy="103.04" r="99.48"/>
+  <path class="fil4" d="M429.92 191.86l0 0c9.81,0 17.76,7.96 17.76,17.77l0 142.12c0,9.81 -7.95,17.76 -17.76,17.76l0 0.01c-9.81,-0.01 -17.77,-7.96 -17.77,-17.77l0 -142.12c0,-9.81 7.96,-17.77 17.77,-17.77z"/>
+ </g>
 </svg>

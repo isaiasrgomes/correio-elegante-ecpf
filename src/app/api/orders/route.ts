@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
-import { orderSchema, resolveSenderClass } from "@/lib/validations";
+import { orderSchema, resolveReceiverClass, resolveSenderClass } from "@/lib/validations";
 import { calculateTotal, getLetterById } from "@/lib/order-utils";
 import { getQrCodesForOrder, getPixKeyForOrder } from "@/lib/qr-codes";
 
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         letter_type: data.letterType,
         letter_price: letter.price,
         receiver_name: data.receiverName,
-        receiver_class: data.receiverClass,
+        receiver_class: resolveReceiverClass(data),
         identification_mode: data.identificationMode,
         sender_name: data.identificationMode === "IDENTIFIED" ? data.senderName : null,
         sender_class: resolveSenderClass(data),
