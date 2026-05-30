@@ -16,7 +16,7 @@ export default async function AdminSettingsPage({
     <>
       <AdminHeader
         title="Configurações"
-        description="Controle a disponibilidade dos pagamentos Pix para os clientes do site."
+        description="Controle pagamentos Pix, chaves e QR Codes de cada produto."
       />
       <SettingsPanel />
     </>

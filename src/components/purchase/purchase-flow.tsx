@@ -9,6 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, Loader2, Minus, Plus } from "lucide-react";
 import { LETTER_TYPES, EXTRAS, CLASSES, MAX_MESSAGE_LENGTH } from "@/lib/constants";
+import { CopyPixKeyButton } from "@/components/purchase/copy-pix-key-button";
 import { orderSchema, type OrderFormValues } from "@/lib/validations";
 import { calculateTotal } from "@/lib/order-utils";
 import { formatCurrency } from "@/lib/utils";
@@ -27,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { fetchJson } from "@/lib/fetch-json";
 
 const STEPS = ["Tipo", "Detalhes", "Pagamento", "Concluído"] as const;
 
@@ -41,6 +43,7 @@ export function PurchaseFlow() {
   const [extras, setExtras] = useState<ExtraState[]>([]);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [qrCodes, setQrCodes] = useState<{ src: string; label: string }[]>([]);
+  const [pixKey, setPixKey] = useState<string | null>(null);
   const [paymentsAvailable, setPaymentsAvailable] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
@@ -58,6 +61,7 @@ export function PurchaseFlow() {
       receiverName: "",
       receiverClass: "1°A",
       identificationMode: "ANONYMOUS",
+      senderIsStudent: true,
       message: "",
       spotifyLink: "",
       extras: [],
@@ -65,6 +69,7 @@ export function PurchaseFlow() {
   });
 
   const identificationMode = form.watch("identificationMode");
+  const senderIsStudent = form.watch("senderIsStudent");
   const message = form.watch("message");
 
   useEffect(() => {
@@ -114,7 +119,13 @@ export function PurchaseFlow() {
     setGlobalError(null);
     setSubmitting(true);
     try {
-      const res = await fetch("/api/orders", {
+      const { ok, data: json, error } = await fetchJson<{
+        orderId: string;
+        qrCodes?: { src: string; label: string }[];
+        pixKey?: string | null;
+        paymentsAvailable?: boolean;
+        error?: string;
+      }>("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -123,10 +134,10 @@ export function PurchaseFlow() {
           extras: extras.filter((e) => e.quantity > 0),
         }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "Erro ao criar pedido.");
+      if (!ok || !json) throw new Error(error ?? json?.error ?? "Erro ao criar pedido.");
       setOrderId(json.orderId);
       setQrCodes(json.qrCodes ?? []);
+      setPixKey(json.pixKey ?? null);
       setPaymentsAvailable(json.paymentsAvailable ?? true);
       goNext();
     } catch (e) {
@@ -140,11 +151,11 @@ export function PurchaseFlow() {
     if (!orderId) return;
     setPaymentLoading(true);
     try {
-      const res = await fetch(`/api/orders/${orderId}/confirm-payment`, {
-        method: "POST",
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "Erro ao confirmar.");
+      const { ok, data: json, error } = await fetchJson<{ status: string; error?: string }>(
+        `/api/orders/${orderId}/confirm-payment`,
+        { method: "POST" }
+      );
+      if (!ok || !json) throw new Error(error ?? json?.error ?? "Erro ao confirmar.");
 
       if (json.status === "AWAITING_PRODUCTION") {
         goNext();
@@ -160,9 +171,10 @@ export function PurchaseFlow() {
     if (step !== 2 || !orderId) return;
 
     const poll = setInterval(async () => {
-      const res = await fetch(`/api/orders/${orderId}/status`);
-      if (!res.ok) return;
-      const json = await res.json();
+      const { ok, data: json } = await fetchJson<{ status: string }>(
+        `/api/orders/${orderId}/status`
+      );
+      if (!ok || !json) return;
       if (json.status === "AWAITING_PRODUCTION" || json.status === "COMPLETED") {
         setStep(3);
       }
@@ -183,6 +195,7 @@ export function PurchaseFlow() {
     paymentStep: step === 2,
     paymentsAvailable,
     qrCodes,
+    pixKey,
     paymentLoading,
     onConfirmPayment: confirmPayment,
     showContinue: step === 1,
@@ -328,7 +341,10 @@ export function PurchaseFlow() {
                       <div className="flex flex-col gap-3 sm:flex-row">
                         <button
                           type="button"
-                          onClick={() => form.setValue("identificationMode", "IDENTIFIED")}
+                          onClick={() => {
+                            form.setValue("identificationMode", "IDENTIFIED");
+                            form.setValue("senderIsStudent", true);
+                          }}
                           className={cn(
                             "flex-1 rounded-2xl border px-4 py-3 text-sm font-medium transition",
                             identificationMode === "IDENTIFIED"
@@ -354,35 +370,79 @@ export function PurchaseFlow() {
                     </div>
 
                     {identificationMode === "IDENTIFIED" && (
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="space-y-2">
-                          <Label>Seu nome</Label>
-                          <Input {...form.register("senderName")} placeholder="Como você se chama" />
-                          {form.formState.errors.senderName && (
-                            <p className="text-xs text-red-600">
-                              {form.formState.errors.senderName.message}
-                            </p>
-                          )}
+                      <div className="space-y-4">
+                        <div className="rounded-2xl border border-rose-50 bg-white/80 px-4 py-3">
+                          <Label className="mb-3 block text-sm">Você é aluno?</Label>
+                          <div className="flex flex-col gap-2 sm:flex-row">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                form.setValue("senderIsStudent", true);
+                              }}
+                              className={cn(
+                                "flex-1 rounded-xl border px-3 py-2 text-sm font-medium transition",
+                                senderIsStudent !== false
+                                  ? "border-rose-400 bg-rose-50 text-rose-800"
+                                  : "border-rose-100 hover:border-rose-200"
+                              )}
+                            >
+                              Sim, sou aluno
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                form.setValue("senderIsStudent", false);
+                                form.setValue("senderClass", undefined);
+                              }}
+                              className={cn(
+                                "flex-1 rounded-xl border px-3 py-2 text-sm font-medium transition",
+                                senderIsStudent === false
+                                  ? "border-rose-400 bg-rose-50 text-rose-800"
+                                  : "border-rose-100 hover:border-rose-200"
+                              )}
+                            >
+                              Não sou aluno
+                            </button>
+                          </div>
                         </div>
-                        <div className="space-y-2">
-                          <Label>Sua turma</Label>
-                          <Select
-                            value={form.watch("senderClass") ?? ""}
-                            onValueChange={(v) =>
-                              form.setValue("senderClass", v as OrderFormValues["senderClass"])
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecione" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {CLASSES.map((c) => (
-                                <SelectItem key={c} value={c}>
-                                  {c}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label>Seu nome</Label>
+                            <Input {...form.register("senderName")} placeholder="Como você se chama" />
+                            {form.formState.errors.senderName && (
+                              <p className="text-xs text-red-600">
+                                {form.formState.errors.senderName.message}
+                              </p>
+                            )}
+                          </div>
+                          {senderIsStudent !== false && (
+                            <div className="space-y-2">
+                              <Label>Sua turma</Label>
+                              <Select
+                                value={form.watch("senderClass") ?? ""}
+                                onValueChange={(v) =>
+                                  form.setValue("senderClass", v as OrderFormValues["senderClass"])
+                                }
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {CLASSES.map((c) => (
+                                    <SelectItem key={c} value={c}>
+                                      {c}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              {form.formState.errors.senderClass && (
+                                <p className="text-xs text-red-600">
+                                  {form.formState.errors.senderClass.message}
+                                </p>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -564,6 +624,7 @@ export function PurchaseFlow() {
                                 width={240}
                                 height={240}
                                 className="h-[200px] w-[200px] object-contain sm:h-[240px] sm:w-[240px]"
+                                unoptimized={qr.src.startsWith("http")}
                               />
                             </div>
                             {qr.label ? (
@@ -578,6 +639,14 @@ export function PurchaseFlow() {
                         Escaneie o QR Code correspondente ao seu pedido. Se houver
                         adicionais, realize também o pagamento do segundo código.
                       </p>
+                      {pixKey && (
+                        <div className="flex flex-col items-center gap-3 rounded-2xl border border-rose-100 bg-rose-50/40 px-5 py-4">
+                          <p className="text-center text-sm text-muted">
+                            Prefere pagar sem QR Code? Copie a chave Pix abaixo:
+                          </p>
+                          <CopyPixKeyButton pixKey={pixKey} />
+                        </div>
+                      )}
                     </div>
                   )}
 

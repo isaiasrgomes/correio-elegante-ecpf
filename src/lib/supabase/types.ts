@@ -33,6 +33,8 @@ export interface Database {
           secret_route: string;
           merchant_name: string;
           merchant_city: string;
+          product_pix_keys: Record<string, string> | null;
+          product_qr_codes: Record<string, string> | null;
           updated_at: string;
         };
         Insert: {
@@ -42,6 +44,8 @@ export interface Database {
           secret_route?: string;
           merchant_name?: string;
           merchant_city?: string;
+          product_pix_keys?: Record<string, string> | null;
+          product_qr_codes?: Record<string, string> | null;
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["settings"]["Insert"]>;

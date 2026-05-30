@@ -11,7 +11,10 @@ export const CLASSES = [
   "3°B",
   "3°C",
   "3°D",
+  "Servidor",
 ] as const;
+
+export const SENDER_NON_STUDENT_LABEL = "Não é aluno" as const;
 
 export type ClassOption = (typeof CLASSES)[number];
 

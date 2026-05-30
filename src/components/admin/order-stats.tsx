@@ -1,4 +1,5 @@
-import { Clock, Package, CheckCircle2, Wallet } from "lucide-react";
+import { Clock, Package, CheckCircle2, Wallet, CircleDollarSign } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 interface OrderStatsProps {
@@ -6,10 +7,20 @@ interface OrderStatsProps {
   awaitingPayment: number;
   awaitingProduction: number;
   completed: number;
+  totalRevenue: number;
   loading?: boolean;
 }
 
 const items = [
+  {
+    key: "totalRevenue",
+    label: "Total arrecadado",
+    icon: CircleDollarSign,
+    color: "from-emerald-500 to-teal-600",
+    bg: "bg-emerald-50",
+    text: "text-emerald-800",
+    format: "currency" as const,
+  },
   {
     key: "total",
     label: "Total de pedidos",
@@ -17,6 +28,7 @@ const items = [
     color: "from-rose-500 to-red-600",
     bg: "bg-rose-50",
     text: "text-rose-700",
+    format: "number" as const,
   },
   {
     key: "awaitingPayment",
@@ -25,6 +37,7 @@ const items = [
     color: "from-amber-500 to-orange-500",
     bg: "bg-amber-50",
     text: "text-amber-800",
+    format: "number" as const,
   },
   {
     key: "awaitingProduction",
@@ -33,14 +46,16 @@ const items = [
     color: "from-violet-500 to-purple-600",
     bg: "bg-violet-50",
     text: "text-violet-800",
+    format: "number" as const,
   },
   {
     key: "completed",
     label: "Finalizados",
     icon: CheckCircle2,
-    color: "from-emerald-500 to-teal-600",
-    bg: "bg-emerald-50",
-    text: "text-emerald-800",
+    color: "from-sky-500 to-blue-600",
+    bg: "bg-sky-50",
+    text: "text-sky-800",
+    format: "number" as const,
   },
 ] as const;
 
@@ -49,13 +64,20 @@ export function OrderStats({
   awaitingPayment,
   awaitingProduction,
   completed,
+  totalRevenue,
   loading,
 }: OrderStatsProps) {
-  const values = { total, awaitingPayment, awaitingProduction, completed };
+  const values = {
+    total,
+    awaitingPayment,
+    awaitingProduction,
+    completed,
+    totalRevenue,
+  };
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {items.map(({ key, label, icon: Icon, color, bg, text }) => (
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      {items.map(({ key, label, icon: Icon, color, bg, text, format }) => (
         <div
           key={key}
           className="group relative overflow-hidden rounded-3xl border border-rose-100/80 bg-white/70 p-5 shadow-sm backdrop-blur-sm transition hover:border-rose-200 hover:shadow-md"
@@ -73,7 +95,9 @@ export function OrderStats({
                 <div className="mt-2 h-9 w-12 animate-pulse rounded-xl bg-rose-100" />
               ) : (
                 <p className={cn("mt-1 text-3xl font-bold tabular-nums", text)}>
-                  {values[key]}
+                  {format === "currency"
+                    ? formatCurrency(values[key])
+                    : values[key]}
                 </p>
               )}
             </div>

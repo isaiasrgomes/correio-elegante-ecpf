@@ -5,18 +5,26 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
-  const supabase = createSupabaseAdmin();
+  try {
+    const { id } = await params;
+    const supabase = createSupabaseAdmin();
 
-  const { data: order, error } = await supabase
-    .from("orders")
-    .select("status")
-    .eq("id", id)
-    .single();
+    const { data: order, error } = await supabase
+      .from("orders")
+      .select("status")
+      .eq("id", id)
+      .single();
 
-  if (error || !order) {
-    return NextResponse.json({ error: "Pedido não encontrado." }, { status: 404 });
+    if (error || !order) {
+      return NextResponse.json({ error: "Pedido não encontrado." }, { status: 404 });
+    }
+
+    return NextResponse.json({ status: order.status });
+  } catch (error) {
+    console.error("[order-status]", error);
+    return NextResponse.json(
+      { error: "Erro interno ao consultar status." },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json({ status: order.status });
 }

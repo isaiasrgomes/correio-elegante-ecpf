@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CLASSES, LETTER_TYPES, MAX_MESSAGE_LENGTH } from "./constants";
+import { CLASSES, LETTER_TYPES, MAX_MESSAGE_LENGTH, SENDER_NON_STUDENT_LABEL } from "./constants";
 
 const letterIds = LETTER_TYPES.map((l) => l.id) as [string, ...string[]];
 const classOptions = [...CLASSES] as [string, ...string[]];
@@ -11,6 +11,7 @@ export const orderSchema = z
     receiverClass: z.enum(classOptions),
     identificationMode: z.enum(["IDENTIFIED", "ANONYMOUS"]),
     senderName: z.string().optional(),
+    senderIsStudent: z.boolean().optional(),
     senderClass: z.enum(classOptions).optional(),
     message: z
       .string()
@@ -36,7 +37,7 @@ export const orderSchema = z
           path: ["senderName"],
         });
       }
-      if (!data.senderClass) {
+      if (data.senderIsStudent !== false && !data.senderClass) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Selecione sua turma.",
@@ -67,6 +68,12 @@ export const orderSchema = z
   });
 
 export type OrderFormValues = z.infer<typeof orderSchema>;
+
+export function resolveSenderClass(data: OrderFormValues): string | null {
+  if (data.identificationMode !== "IDENTIFIED") return null;
+  if (data.senderIsStudent === false) return SENDER_NON_STUDENT_LABEL;
+  return data.senderClass ?? null;
+}
 
 export const loginSchema = z.object({
   email: z.string().email("E-mail inválido."),

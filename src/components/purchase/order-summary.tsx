@@ -8,6 +8,7 @@ import { EXTRAS, LETTER_TYPES } from "@/lib/constants";
 import { formatCurrency } from "@/lib/utils";
 import { calculateTotal } from "@/lib/order-utils";
 import { Button } from "@/components/ui/button";
+import { CopyPixKeyButton } from "@/components/purchase/copy-pix-key-button";
 import { cn } from "@/lib/utils";
 
 interface QrCodeItem {
@@ -22,6 +23,7 @@ interface OrderSummaryProps {
   paymentStep?: boolean;
   paymentsAvailable?: boolean;
   qrCodes?: QrCodeItem[];
+  pixKey?: string | null;
   paymentLoading?: boolean;
   onConfirmPayment?: () => void;
   showContinue?: boolean;
@@ -40,6 +42,7 @@ export function OrderSummary({
   paymentStep,
   paymentsAvailable,
   qrCodes = [],
+  pixKey,
   paymentLoading,
   onConfirmPayment,
   showContinue,
@@ -175,6 +178,7 @@ export function OrderSummary({
                               width={120}
                               height={120}
                               className="h-[100px] w-[100px] object-contain sm:h-[120px] sm:w-[120px]"
+                              unoptimized={qr.src.startsWith("http")}
                             />
                           </div>
                           {qr.label ? (
@@ -183,6 +187,9 @@ export function OrderSummary({
                         </div>
                       ))}
                     </div>
+                  )}
+                  {pixKey && (
+                    <CopyPixKeyButton pixKey={pixKey} size="sm" className="w-full" />
                   )}
                   <Button
                     type="button"

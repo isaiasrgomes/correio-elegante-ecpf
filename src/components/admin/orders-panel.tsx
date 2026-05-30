@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Search,
   Eye,
@@ -9,9 +9,10 @@ import {
   X,
   Inbox,
   Filter,
+  Trash2,
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { ORDER_STATUS_LABELS, LETTER_TYPES, EXTRAS } from "@/lib/constants";
+import { ORDER_STATUS_LABELS, LETTER_TYPES, EXTRAS, SENDER_NON_STUDENT_LABEL } from "@/lib/constants";
 import { getSpotifyCodeImageUrl } from "@/lib/spotify-code";
 import { OrderStats } from "@/components/admin/order-stats";
 import { DetailField } from "@/components/admin/detail-field";
@@ -26,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { fetchJson } from "@/lib/fetch-json";
 
 interface Order {
   id: string;
@@ -42,6 +44,30 @@ interface Order {
   spotify_link: string | null;
   polaroid_url: string | null;
   extras: { id: string; quantity: number }[] | null;
+}
+
+interface OrderStatsData {
+  total: number;
+  awaitingPayment: number;
+  awaitingProduction: number;
+  completed: number;
+  totalRevenue: number;
+}
+
+const EMPTY_STATS: OrderStatsData = {
+  total: 0,
+  awaitingPayment: 0,
+  awaitingProduction: 0,
+  completed: 0,
+  totalRevenue: 0,
+};
+
+function formatSender(order: Order) {
+  if (order.identification_mode === "ANONYMOUS") return "Anônimo";
+  if (order.sender_class === SENDER_NON_STUDENT_LABEL) {
+    return `${order.sender_name} · ${SENDER_NON_STUDENT_LABEL}`;
+  }
+  return `${order.sender_name} · ${order.sender_class}`;
 }
 
 function statusVariant(status: string) {
@@ -68,21 +94,27 @@ function TableSkeleton() {
 
 export function OrdersPanel() {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [stats, setStats] = useState<OrderStatsData>(EMPTY_STATS);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState("active");
   const [selected, setSelected] = useState<Order | null>(null);
   const [downloadingPolaroid, setDownloadingPolaroid] = useState(false);
   const [downloadingSpotifyCode, setDownloadingSpotifyCode] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams();
     if (q) params.set("q", q);
-    if (status !== "all") params.set("status", status);
-    const res = await fetch(`/api/admin/orders?${params}`);
-    const data = await res.json();
-    if (res.ok) setOrders(data.orders);
+    if (status) params.set("status", status);
+    const { ok, data } = await fetchJson<{ orders: Order[]; stats: OrderStatsData }>(
+      `/api/admin/orders?${params}`
+    );
+    if (ok && data) {
+      setOrders(data.orders);
+      setStats(data.stats ?? EMPTY_STATS);
+    }
     setLoading(false);
   }, [q, status]);
 
@@ -91,29 +123,34 @@ export function OrdersPanel() {
     return () => clearTimeout(t);
   }, [fetchOrders]);
 
-  const stats = useMemo(
-    () => ({
-      total: orders.length,
-      awaitingPayment: orders.filter((o) => o.status === "AWAITING_PAYMENT").length,
-      awaitingProduction: orders.filter((o) => o.status === "AWAITING_PRODUCTION")
-        .length,
-      completed: orders.filter((o) => o.status === "COMPLETED").length,
-    }),
-    [orders]
-  );
-
   const updateStatus = async (id: string, newStatus: string) => {
-    const res = await fetch(`/api/admin/orders/${id}`, {
+    const { ok, data } = await fetchJson<{ order: Order }>(`/api/admin/orders/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: newStatus }),
     });
-    if (res.ok) {
+    if (ok) {
       fetchOrders();
-      if (selected?.id === id) {
-        const data = await res.json();
+      if (selected?.id === id && data?.order) {
         setSelected(data.order);
       }
+    }
+  };
+
+  const deleteOrder = async (id: string) => {
+    if (!confirm("Tem certeza que deseja excluir este pedido? Esta ação não pode ser desfeita.")) {
+      return;
+    }
+    setDeleting(true);
+    try {
+      const { ok, error } = await fetchJson(`/api/admin/orders/${id}`, { method: "DELETE" });
+      if (!ok) throw new Error(error ?? "Erro ao excluir.");
+      setSelected(null);
+      fetchOrders();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Erro ao excluir pedido.");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -198,7 +235,7 @@ export function OrdersPanel() {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos os status</SelectItem>
+              <SelectItem value="active">Em andamento</SelectItem>
               <SelectItem value="AWAITING_PAYMENT">Aguardando pagamento</SelectItem>
               <SelectItem value="AWAITING_PRODUCTION">Aguardando produção</SelectItem>
               <SelectItem value="COMPLETED">Finalizado</SelectItem>
@@ -243,7 +280,7 @@ export function OrdersPanel() {
             </span>
             <p className="mt-4 font-medium text-[#2a1a1f]">Nenhum pedido encontrado</p>
             <p className="mt-1 max-w-xs text-sm text-muted">
-              {q || status !== "all"
+              {q || status !== "active"
                 ? "Tente outro filtro ou termo de busca."
                 : "Os pedidos aparecerão aqui quando os clientes finalizarem a compra."}
             </p>
@@ -361,9 +398,7 @@ export function OrdersPanel() {
                   {selected.receiver_name} · {selected.receiver_class}
                 </DetailField>
                 <DetailField label="Remetente" className="sm:col-span-2">
-                  {selected.identification_mode === "ANONYMOUS"
-                    ? "Anônimo"
-                    : `${selected.sender_name} · ${selected.sender_class}`}
+                  {formatSender(selected)}
                 </DetailField>
               </dl>
 
@@ -489,6 +524,19 @@ export function OrdersPanel() {
                   Confirmar pagamento
                 </Button>
               )}
+              <Button
+                variant="destructive"
+                className="flex-1 rounded-2xl sm:flex-none"
+                disabled={deleting}
+                onClick={() => deleteOrder(selected.id)}
+              >
+                {deleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+                Excluir pedido
+              </Button>
               <Button
                 variant="ghost"
                 className={cn(

@@ -20,6 +20,8 @@ create table if not exists settings (
   pix_provider text default 'brcode',
   mercadopago_access_token text,
   openpix_app_id text,
+  product_pix_keys jsonb default '{}'::jsonb,
+  product_qr_codes jsonb default '{}'::jsonb,
   updated_at timestamptz default now()
 );
 
@@ -54,4 +56,4 @@ create table if not exists orders (
 
 insert into settings (id) values ('default') on conflict (id) do nothing;
 
--- Storage: crie o bucket "polaroids" como público no painel Supabase
+-- Storage: crie os buckets "polaroids" e "qr-codes" como públicos no painel Supabase

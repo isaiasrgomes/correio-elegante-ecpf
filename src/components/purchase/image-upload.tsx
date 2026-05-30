@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { ImagePlus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { fetchJson } from "@/lib/fetch-json";
 
 const ACCEPTED = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE = 5 * 1024 * 1024;
@@ -34,9 +35,11 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
       try {
         const formData = new FormData();
         formData.append("file", file);
-        const res = await fetch("/api/upload", { method: "POST", body: formData });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Falha no upload.");
+        const { ok, data, error } = await fetchJson<{ url: string; error?: string }>(
+          "/api/upload",
+          { method: "POST", body: formData }
+        );
+        if (!ok || !data?.url) throw new Error(error ?? data?.error ?? "Falha no upload.");
         onChange(data.url);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Erro ao enviar imagem.");

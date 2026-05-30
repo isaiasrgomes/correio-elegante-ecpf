@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
-import { orderSchema } from "@/lib/validations";
+import { orderSchema, resolveSenderClass } from "@/lib/validations";
 import { calculateTotal, getLetterById } from "@/lib/order-utils";
-import { getQrCodesForOrder } from "@/lib/qr-codes";
+import { getQrCodesForOrder, getPixKeyForOrder } from "@/lib/qr-codes";
 
 export async function POST(request: Request) {
   try {
@@ -24,11 +24,15 @@ export async function POST(request: Request) {
     const supabase = createSupabaseAdmin();
     const { data: settings } = await supabase
       .from("settings")
-      .select("pix_enabled")
+      .select("pix_enabled, product_pix_keys, product_qr_codes")
       .eq("id", "default")
       .single();
 
     const paymentsAvailable = Boolean(settings?.pix_enabled);
+    const paymentConfig = {
+      productPixKeys: (settings?.product_pix_keys as Record<string, string> | null) ?? {},
+      productQrCodes: (settings?.product_qr_codes as Record<string, string> | null) ?? {},
+    };
     const total = calculateTotal(data.letterType, data.extras ?? []);
     const extras = data.extras?.filter((e) => e.quantity > 0) ?? [];
 
@@ -41,7 +45,7 @@ export async function POST(request: Request) {
         receiver_class: data.receiverClass,
         identification_mode: data.identificationMode,
         sender_name: data.identificationMode === "IDENTIFIED" ? data.senderName : null,
-        sender_class: data.identificationMode === "IDENTIFIED" ? data.senderClass : null,
+        sender_class: resolveSenderClass(data),
         message: data.message,
         spotify_link: data.spotifyLink || null,
         polaroid_url: data.polaroidUrl || null,
@@ -58,12 +62,21 @@ export async function POST(request: Request) {
     }
 
     const qrCodes = paymentsAvailable
-      ? getQrCodesForOrder(data.letterType, extras)
+      ? getQrCodesForOrder(data.letterType, extras, paymentConfig)
       : [];
+
+    const pixKey = paymentsAvailable
+      ? getPixKeyForOrder(
+          data.letterType,
+          extras,
+          paymentConfig.productPixKeys
+        )
+      : null;
 
     return NextResponse.json({
       orderId: order.id,
       qrCodes,
+      pixKey,
       paymentsAvailable,
       total,
     });
